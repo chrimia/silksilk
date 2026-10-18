@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>丝路拾遗·大美西北</title>
+<link rel="preload" as="image" href="assets/cover.jpg?v=20261018k">
+<link rel="preload" as="image" href="assets/bg-scene.jpg?v=20261018k">
+<link rel="stylesheet" href="style.css?v=20261018k">
+</head>
+<body>
+
+<div id="stage">
+  <div id="screens">
+
+    <!-- ============ 章节1 封面：第二张图整图铺满，不加装饰 ============ -->
+    <section class="screen cover" id="screen-cover">
+      <img class="cover-full" src="assets/cover.jpg?v=20261018k" fetchpriority="high" alt="丝路拾遗·大美西北">
+    </section>
+
+    <!-- ============ 章节2 引言 ============ -->
+    <section class="screen intro" id="screen-intro">
+      <img class="intro-bg-img" src="assets/bg-scene.jpg?v=20261018k" data-src="assets/bg-scene.jpg?v=20261018k" alt="大美西北">
+      <div class="intro-inner">
+        <div class="tag-gold ani">西北 = 陕 · 甘 · 宁 · 新 · 青</div>
+        <div class="big-number ani" data-delay="1"><span id="countNum">0</span><em>项</em></div>
+        <div class="big-label ani" data-delay="2">西北五省国家级非遗代表性项目</div>
+        <div class="src-note ani" data-delay="3">数据来源：文化和旅游部（2026）</div>
+        <div class="province-chips ani" data-delay="4" id="provinceChips"></div>
+        <p class="intro-text ani" data-delay="6">丝绸之路从这里穿过，花儿与木卡姆在这里唱响。<br>非遗，是西北最生动的旅行向导。</p>
+        <div class="scroll-hint ani" data-delay="8">继续下滑 · 开启丝路之旅</div>
+      </div>
+    </section>
+
+    <!-- ============ 章节3 地图总览 ============ -->
+    <section class="screen map-screen" id="screen-map">
+      <h2 class="map-title ani">跟着非遗，一起出发</h2>
+      <div class="map-entries ani" data-delay="2" id="mapEntries"></div>
+      <div class="map-hint ani" data-delay="5">点亮五道光，遇见西北非遗</div>
+    </section>
+
+    <!-- ============ 章节4-8 五省叙事长页（JS 渲染） ============ -->
+    <section class="screen province" id="province-shannxi" data-province="shannxi"></section>
+    <section class="screen province" id="province-gansu" data-province="gansu"></section>
+    <section class="screen province" id="province-ningxia" data-province="ningxia"></section>
+    <section class="screen province" id="province-xinjiang" data-province="xinjiang"></section>
+    <section class="screen province" id="province-qinghai" data-province="qinghai"></section>
+
+    <!-- ============ 章节9 非遗分类馆 ============ -->
+    <section class="screen museum" id="screen-museum">
+      <h2 class="museum-title ani">非遗分类馆</h2>
+      <div class="cat-tabs ani" data-delay="1" id="catTabs"></div>
+      <div class="cat-list ani" data-delay="3" id="catList"></div>
+    </section>
+
+    <!-- ============ 章节10 非遗文旅线路 ============ -->
+    <section class="screen routes" id="screen-routes">
+      <h2 class="routes-title ani">跟着非遗出发</h2>
+      <div class="route-list ani" data-delay="2" id="routeList"></div>
+    </section>
+
+    <!-- ============ 章节11 传承与守护 ============ -->
+    <section class="screen guard" id="screen-guard">
+      <div class="guard-inner">
+        <h2 class="guard-title ani">传承，是最好的旅行</h2>
+        <p class="guard-quote ani" data-delay="3">非遗不是博物馆里的标本，<br>而是西北大地上仍然活着的生活。<br>保护非遗，就是保护我们出发的理由。</p>
+        <p class="guard-call ani" data-delay="6">把这份西北记忆，分享给下一个同行者。</p>
+        <div class="guard-line ani" data-delay="8"></div>
+        <div class="guard-team ani" data-delay="9">团队名：汇思小组<br>成员：白惠茹（组长）、王嘉慧、马巧铃、石思瑀、解项瑜<br>指导教师：敖慧<br>日期：2026年10月</div>
+        </section>
+
+    <!-- ============ 章节12 分享 ============ -->
+    <section class="screen share" id="screen-share">
+      <h2 class="share-title ani">一起出发吧</h2>
+      <div class="poster-wrap ani" data-delay="2">
+        <div class="poster" id="poster">
+          <canvas id="posterCanvas" width="600" height="1000"></canvas>
+          <input class="nick-input" id="nickInput" maxlength="12" placeholder="输入你的昵称，生成专属海报" />
+        </div>
+      </div>
+      <div class="share-btns ani" data-delay="4">
+        <button class="btn-primary" id="savePosterBtn">保存海报</button>
+        <button class="btn-secondary" id="shareBtn">转发好友</button>
+      </div>
+      <div class="share-thanks" id="shareThanks">谢谢你，让更多人看见西北。</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- 首页按钮：滚过开头后常驻 -->
+<div class="home-btn hidden" id="homeBtn">首页</div>
+<!-- 返回地图目录：省份篇章可见时显示 -->
+<div class="back-map hidden" id="backMap">目录</div>
+<!-- 省份篇章进度指示 -->
+<div class="progress-dots hidden" id="progressDots"></div>
+<!-- 背景音乐开关：常驻右下角 -->
+<button class="bgm-btn" id="bgmBtn" aria-label="背景音乐开关">♫</button>
+
+<!-- 轻提示 -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js?v=20261018k"></script>
+</body>
+</html>
