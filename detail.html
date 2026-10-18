@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>非遗时间线 · 丝路拾遗</title>
+<style>
+:root{
+  --ink:#1A1B1C;--sub:#6B6B6B;--line:#C9C9C9;--line-d:#E3E3E3;
+  --bg:#FAFAF7;--card:#FFFFFF;--accent:#8A5A3B;--accent-2:#B0895A;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:.3rem;line-height:1.6;
+}
+/* —— 顶栏 —— */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(.4rem + env(safe-area-inset-top)) .3rem .22rem;
+  background:rgba(250,250,247,.94);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line-d);
+}
+.back-btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  font-size:.26rem;padding:.1rem .24rem;border-radius:999px;cursor:pointer;
+}
+.brand{font-size:.24rem;color:var(--sub);letter-spacing:.06em;font-weight:600;}
+/* —— 头部 —— */
+.detail-head{
+  padding:calc(1.9rem + env(safe-area-inset-top)) .4rem .5rem;
+  text-align:center;
+}
+.detail-img{
+  width:2.6rem;height:2.6rem;margin:0 auto .3rem;border-radius:50%;
+  background:#EFEFEA center/cover no-repeat;
+  border:2px solid var(--line-d);box-shadow:0 .06rem .16rem rgba(0,0,0,.08);
+}
+.detail-tag{
+  display:inline-block;font-size:.22rem;color:var(--accent);
+  border:1px solid rgba(138,90,59,.45);border-radius:999px;
+  padding:.03rem .18rem;margin-bottom:.18rem;letter-spacing:.1em;
+}
+.detail-title{font-size:.52rem;font-weight:700;letter-spacing:.04em;}
+.detail-sub{font-size:.26rem;color:var(--sub);margin-top:.12rem;}
+/* —— 时间线 —— */
+.tl-wrap{padding:.2rem .4rem 1.2rem;}
+.tl-stage-title{
+  font-size:.26rem;color:var(--sub);text-align:center;margin:.3rem 0 .2rem;
+  letter-spacing:.12em;font-weight:600;
+}
+.tl{
+  position:relative;padding-left:.5rem;
+}
+.tl::before{
+  content:"";position:absolute;left:.14rem;top:.1rem;bottom:.1rem;
+  width:2px;background:var(--line);border-radius:2px;
+}
+.tl-item{position:relative;padding:0 0 .44rem .2rem;}
+.tl-item:last-child{padding-bottom:.1rem;}
+.tl-dot{
+  position:absolute;left:-.42rem;top:.1rem;width:.3rem;height:.3rem;border-radius:50%;
+  background:#fff;border:3px solid var(--accent-2);
+  box-shadow:0 0 0 3px var(--bg);
+}
+.tl-item.past .tl-dot{border-color:var(--accent);}
+.tl-item.gap .tl-dot{border-color:#B8B8B8;}
+.tl-item.live .tl-dot{background:var(--accent);border-color:var(--accent);}
+.tl-card{
+  background:var(--card);border:1px solid var(--line-d);border-radius:.16rem;
+  padding:.22rem .26rem .26rem;
+  box-shadow:0 .03rem .1rem rgba(0,0,0,.05);
+}
+.tl-era{
+  display:flex;align-items:center;gap:.14rem;margin-bottom:.08rem;
+}
+.tl-era b{
+  font-size:.28rem;color:var(--accent);font-weight:700;white-space:nowrap;
+}
+.tl-era span{
+  font-size:.22rem;color:var(--sub);letter-spacing:.06em;
+  border:1px solid var(--line);border-radius:999px;padding:.01rem .14rem;
+}
+.tl-card p{font-size:.26rem;color:var(--ink);}
+.tl-foot{
+  text-align:center;color:var(--sub);font-size:.22rem;
+  padding:.4rem .4rem calc(.9rem + env(safe-area-inset-bottom));
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="back-btn" id="backBtn">← 返回</button>
+  <span class="brand">丝路拾遗 · 非遗时间线</span>
+</div>
+
+<div id="detailRoot"></div>
+
+<script>
+/* —— 非遗时间线数据（阶段：过去/断层/抢救/接续/未来） —— */
+var TIMELINES = [
+{
+  key:'秦腔', img:'assets/item-qinqiang.jpg', tag:'人类记忆 · 戏曲',
+  title:'秦腔', sub:'八百里秦川，一声吼出千年豪情',
+  stages:[
+    {cls:'past', era:'起源', badge:'古代', text:'萌芽于先秦西秦腔，明清时期走向成熟，成为西北地区流传最广的梆子腔系代表。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'近代社会变迁中，演出市场萎缩，班社解散，年轻一代听众流失。'},
+    {cls:'save', era:'抢救', badge:'2006', text:'列入首批国家级非遗名录，启动经典剧目整理与老艺人记录工程。'},
+    {cls:'live', era:'接续', badge:'今天', text:'易俗社等院团常演不衰，进校园、上云端，秦腔腔调走进新一代生活。'}
+  ]
+},
+{
+  key:'华阴老腔', img:'assets/item-huayin.jpg', tag:'国家级非遗 · 戏曲',
+  title:'华阴老腔', sub:'黄土地上的摇滚，一人唱满台吼',
+  stages:[
+    {cls:'past', era:'起源', badge:'明代', text:'源自陕西华阴船工号子与皮影说唱，以惊木击凳、粗犷嘶吼著称。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'皮影戏衰落，老腔艺人年迈，班社锐减，一度濒临失传。'},
+    {cls:'save', era:'抢救', badge:'2006', text:'列入首批国家级非遗名录，老腔艺人进京展演，被媒体誉为"华阴老腔一声喊"。'},
+    {cls:'live', era:'接续', badge:'今天', text:'与流行音乐跨界合作登上春晚，老腔成为陕西文旅的招牌声音。'}
+  ]
+},
+{
+  key:'安塞腰鼓', img:'assets/item-ansai.jpg', tag:'国家级非遗 · 传统舞蹈',
+  title:'安塞腰鼓', sub:'黄土高原上的生命律动',
+  stages:[
+    {cls:'past', era:'起源', badge:'古代', text:'源于古代战鼓与祭祀鼓乐，延安安塞一带世代相传，逢节庆千人齐擂。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'农村人口外流，年轻鼓手减少，民俗场合萎缩。'},
+    {cls:'save', era:'抢救', badge:'2006', text:'列入首批国家级非遗名录，安塞建立腰鼓传承基地与校园教学体系。'},
+    {cls:'live', era:'接续', badge:'今天', text:'安塞腰鼓登上大型演出与影视舞台，成为陕北精神的文化名片。'}
+  ]
+},
+{
+  key:'花儿', img:'assets/item-huaer.jpg', tag:'人类非遗 · 传统音乐',
+  title:'花儿', sub:'高腔亮嗓，唱的是爱情与山河',
+  stages:[
+    {cls:'past', era:'起源', badge:'明清', text:'流传于甘青宁新等地的山歌，多在田间庙会即兴对唱，词句即景生情。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'民俗歌会一度式微，年轻歌手中断传唱，传统曲令面临失传。'},
+    {cls:'save', era:'抢救', badge:'2009', text:'甘肃花儿等列入人类非遗名录，各地恢复六月六等大型花儿会。'},
+    {cls:'live', era:'接续', badge:'今天', text:'花儿会年年唱响，歌手与学者合力记录曲令，山歌重新走进日常。'}
+  ]
+},
+{
+  key:'兰州太平鼓', img:'assets/item-taipinggu.jpg', tag:'国家级非遗 · 传统舞蹈',
+  title:'兰州太平鼓', sub:'鼓声如雷，祈求天下太平',
+  stages:[
+    {cls:'past', era:'起源', badge:'明代', text:'源自古代军中鼓乐与民间社火，兰州人春节擂鼓祈福，鼓阵多达百面。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'城市变迁中社火活动减少，鼓手队伍老龄化。'},
+    {cls:'save', era:'抢救', badge:'2006', text:'列入首批国家级非遗名录，兰州成立太平鼓表演团与传习所。'},
+    {cls:'live', era:'接续', badge:'今天', text:'太平鼓在节庆、运动会与文旅演出中常演，鼓点响彻黄河两岸。'}
+  ]
+},
+{
+  key:'环县道情皮影戏', img:'assets/item-piying.jpg', tag:'人类非遗 · 传统戏剧',
+  title:'环县道情皮影戏', sub:'牛皮刻影，灯下说戏',
+  stages:[
+    {cls:'past', era:'起源', badge:'清代', text:'道情说唱与皮影结合，形成于陇东环县，影人雕刻精细，唱腔苍凉悠远。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'电视普及冲击，戏班解散，皮影老艺人相继离世。'},
+    {cls:'save', era:'抢救', badge:'2011', text:'作为中国皮影戏组成部分列入人类非遗名录，抢救性记录传统剧本与唱腔。'},
+    {cls:'live', era:'接续', badge:'今天', text:'环县皮影进校园进景区，年轻艺人重刻影人，老腔调有了新听众。'}
+  ]
+},
+{
+  key:'回族民间器乐·口弦', img:'assets/item-kouxian.jpg', tag:'国家级非遗 · 传统音乐',
+  title:'回族民间器乐 · 口弦', sub:'会说话的小乐器，弹在唇齿间',
+  stages:[
+    {cls:'past', era:'起源', badge:'古代', text:'竹、铁口弦是回族传统"嘴上乐器"，姑娘们含弦弹拨，以声传情，婚俗中尤盛。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'生活方式改变，口弦制作与弹奏技艺在年轻一代中渐趋失传。'},
+    {cls:'save', era:'抢救', badge:'2008', text:'回族民间器乐列入国家级非遗名录，宁夏建立口弦传习所与校园课程。'},
+    {cls:'live', era:'接续', badge:'今天', text:'口弦登上舞台、走进课堂，新一代传承人让弦声重新响在塞上江南。'}
+  ]
+},
+{
+  key:'贺兰砚制作技艺', img:'assets/item-heilanyan.jpg', tag:'国家级非遗 · 传统技艺',
+  title:'贺兰砚制作技艺', sub:'色如端石微深紫，纹似金星细入肌',
+  stages:[
+    {cls:'past', era:'起源', badge:'清代', text:'贺兰山石温润易雕，清代起开采制砚，成为西北文房珍品。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'砚台需求式微，老砚工转行，制作技艺后继乏人。'},
+    {cls:'save', era:'抢救', badge:'2011', text:'贺兰砚制作技艺列入国家级非遗名录，建工作室培养年轻砚工。'},
+    {cls:'live', era:'接续', badge:'今天', text:'贺兰砚走向文博会与文创市场，传统雕刻与当代审美结合。'}
+  ]
+},
+{
+  key:'热贡艺术·唐卡', img:'assets/item-tangka.jpg', tag:'人类非遗 · 传统美术',
+  title:'热贡艺术 · 唐卡', sub:'一笔一画皆是信仰',
+  stages:[
+    {cls:'past', era:'起源', badge:'元明', text:'热贡地区藏传佛教艺术兴盛，唐卡绘制以矿物颜料、金线勾勒闻名。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'动荡年代寺院绘制中断，画师流散，技艺传承出现空档。'},
+    {cls:'save', era:'抢救', badge:'2009', text:'热贡艺术列入人类非遗名录，恢复画院与师徒传承体系。'},
+    {cls:'live', era:'接续', badge:'今天', text:'热贡唐卡走向世界展览，年轻画师在传承中创新题材。'}
+  ]
+},
+{
+  key:'格萨（斯）尔史诗', img:'assets/item-gesar.jpg', tag:'人类非遗 · 民间文学',
+  title:'格萨（斯）尔史诗', sub:'世界上最长的英雄史诗',
+  stages:[
+    {cls:'past', era:'起源', badge:'千年', text:'藏族、蒙古族等民族口头传唱的英雄史诗，说唱艺人代代相传。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'老艺人相继离世，说唱传统面临失传，史诗记录零散。'},
+    {cls:'save', era:'抢救', badge:'2009', text:'格萨（斯）尔列入人类非遗名录，启动大规模采录与数字化整理。'},
+    {cls:'live', era:'接续', badge:'今天', text:'说唱艺人进入高校与舞台，史诗以书籍、音频、动画多形态延续。'}
+  ]
+},
+{
+  key:'湟源排灯', img:'assets/item-paindeng.jpg', tag:'国家级非遗 · 传统美术',
+  title:'湟源排灯', sub:'年年元宵，排灯点亮老街',
+  stages:[
+    {cls:'past', era:'起源', badge:'清代', text:'青海湟源丹噶尔古城的商号灯会，一排排木框彩灯绘故事、题诗词。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'灯会停办多年，排灯制作艺人流失，老灯箱散落民间。'},
+    {cls:'save', era:'抢救', badge:'2008', text:'湟源排灯列入国家级非遗名录，老街恢复元宵排灯展演。'},
+    {cls:'live', era:'接续', badge:'今天', text:'排灯与旅游节结合，匠人新制灯箱，古城夜游重新点亮。'}
+  ]
+},
+{
+  key:'维吾尔木卡姆艺术', img:'assets/item-mukamu.jpg', tag:'人类非遗 · 传统音乐',
+  title:'维吾尔木卡姆艺术', sub:'集歌、舞、乐于一体的丝路瑰宝',
+  stages:[
+    {cls:'past', era:'起源', badge:'千年', text:'源自西域乐舞传统，历经丝路交融，形成十二木卡姆等宏大套曲。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'艺人年迈、宫廷乐队散落，完整传唱木卡姆的民间乐手所剩无几。'},
+    {cls:'save', era:'抢救', badge:'2005', text:'列入人类非遗名录，成立木卡姆传承中心，抢救录音与乐谱。'},
+    {cls:'live', era:'接续', badge:'今天', text:'木卡姆进入学校与艺术节，都塔尔、手鼓与歌喉重新在庭院响起。'}
+  ]
+},
+{
+  key:'艾德莱斯绸织染技艺', img:'assets/item-adelis.jpg', tag:'国家级非遗 · 传统技艺',
+  title:'艾德莱斯绸织染技艺', sub:'布谷鸟的翅膀花，扎经染出沙漠彩虹',
+  stages:[
+    {cls:'past', era:'起源', badge:'古代', text:'和田地区扎经染色织造，图案如云似水，是维吾尔妇女的节日盛装。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'机制布冲击手工织染，老织户减少，传统图案流失。'},
+    {cls:'save', era:'抢救', badge:'2008', text:'艾德莱斯绸织染技艺列入国家级非遗名录，恢复传统扎染工艺。'},
+    {cls:'live', era:'接续', badge:'今天', text:'艾德莱斯走向时装周与文创设计，老织机织出新潮流。'}
+  ]
+},
+{
+  key:'麦西热甫', img:'assets/item-maxirefu.jpg', tag:'人类非遗 · 民俗',
+  title:'麦西热甫', sub:'歌舞、游戏与美食的狂欢',
+  stages:[
+    {cls:'past', era:'起源', badge:'古代', text:'维吾尔族传统的民间聚会，歌舞、对诗、游戏、美食一体，婚庆节日常办。'},
+    {cls:'gap', era:'断层', badge:'20世纪', text:'现代娱乐兴起，乡村麦西热甫次数减少，传统程式逐渐简化。'},
+    {cls:'save', era:'抢救', badge:'2010', text:'新疆维吾尔族麦西热甫列入人类非遗名录，各地恢复节庆聚会。'},
+    {cls:'live', era:'接续', badge:'今天', text:'麦西热甫活跃于庭院与景区，成为新疆最生动的待客方式。'}
+  ]
+}
+];
+
+/* —— 渲染 —— */
+function init() {
+  var key = decodeURIComponent((location.search.match(/[?&]key=([^&]+)/) || [])[1] || '秦腔');
+  var d = null;
+  for (var i = 0; i < TIMELINES.length; i++) if (TIMELINES[i].key === key) { d = TIMELINES[i]; break; }
+  if (!d) d = TIMELINES[0];
+  document.title = d.title + ' · 非遗时间线 · 丝路拾遗';
+  var html =
+    '<div class="detail-head">' +
+      '<div class="detail-img" style="background-image:url(' + d.img + ')"></div>' +
+      '<div class="detail-tag">' + d.tag + '</div>' +
+      '<div class="detail-title">' + d.title + '</div>' +
+      '<div class="detail-sub">' + d.sub + '</div>' +
+    '</div>' +
+    '<div class="tl-wrap">' +
+      '<div class="tl-stage-title">—— 时间线 · 一段技艺的来路 ——</div>' +
+      '<div class="tl">' +
+        d.stages.map(function (s) {
+          return '<div class="tl-item ' + s.cls + '">' +
+            '<span class="tl-dot"></span>' +
+            '<div class="tl-card">' +
+              '<div class="tl-era"><b>' + s.era + '</b><span>' + s.badge + '</span></div>' +
+              '<p>' + s.text + '</p>' +
+            '</div></div>';
+        }).join('') +
+      '</div>' +
+      '<div class="tl-foot">丝路拾遗 · 大美西北 ｜ 数据参考文化和旅游部非遗名录整理</div>' +
+    '</div>';
+  document.getElementById('detailRoot').innerHTML = html;
+}
+document.getElementById('backBtn').addEventListener('click', function () {
+  if (history.length > 1) history.back(); else location.href = 'index.html';
+});
+init();
+</script>
+</body>
+</html>
