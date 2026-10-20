@@ -95,7 +95,7 @@ AIGC:
 | assets/audio/inst-shannxi-2.mp3 | 陕西·竹笛 | DIZI FLUTE 02 | freesound_community | 8s | Pixabay License |
 | assets/audio/inst-gansu-1.mp3 | 甘肃·太平鼓（框鼓） | FRAME DRUM (Middle East instrument) | ETHNICsound | 10s | Pixabay License |
 | assets/audio/inst-gansu-2.mp3 | 甘肃·唢呐 | suona | freesound_community | 3.7s | Pixabay License |
-| assets/audio/inst-qinghai-1.mp3 | 青海·扎木聂（冬不拉替代） | Kazakh Dombra Opener 1 Var | Basker_Score | 8s | Pixabay License |
+| assets/audio/inst-qinghai-1.mp3 | 青海·六弦琴（塞塔尔替代，2026-10-20 更换，与都塔尔区分） | Bowed and plucked setar | soundscatter（Freesound） | 9s | CC0（免费商用、无需署名） |
 | assets/audio/inst-qinghai-2.mp3 | 青海·藏铃/颂钵 | 047130_Bright Tibetan Bell Ding B Note | freesound_community | 8s | Pixabay License |
 | assets/audio/inst-xinjiang-1.mp3 | 新疆·都塔尔（冬不拉替代） | Kazakh Dombra Opener 2 Var | Basker_Score | 8s | Pixabay License |
 | assets/audio/inst-xinjiang-2.mp3 | 新疆·手鼓（达卜） | darbuka | freesound_community | 8s | Pixabay License |
